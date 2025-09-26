@@ -1,21 +1,38 @@
-using MongoDB.Driver; // Make sure you have MongoDB.Driver NuGet package installed
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DatabaseConnector
 {
     public class MongoDBConnector
     {
-        private readonly IMongoDatabase _database; // field to hold the database connection
+        private readonly IMongoDatabase _database;
+        private readonly MongoClient _client;
 
         public MongoDBConnector(string connectionString, string databaseName)
         {
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(databaseName);
+            _client = new MongoClient(connectionString);
+            _database = _client.GetDatabase(databaseName);
         }
 
-        // Optional: expose the database so it can be used in other classes
+        // Expose the database if needed
         public IMongoDatabase GetDatabase()
         {
             return _database;
+        }
+
+        // ✅ New method: Ping MongoDB to check connectivity
+        public bool Ping()
+        {
+            try
+            {
+                var command = new BsonDocument("ping", 1);
+                _database.RunCommand<BsonDocument>(command);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
