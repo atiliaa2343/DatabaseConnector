@@ -42,6 +42,21 @@ namespace DatabaseConnector.Tests
 
             // Assert
             Assert.True(result);
+        } 
+        [Fact]
+        public void Ping_ReturnsFalse_WhenMongoDbIsNotRunning()
+        {
+            // Arrange: use an invalid connection string (MongoDB not running here)
+            var connector = new MongoDBConnector(
+                "mongodb://localhost:9999", // bad port
+                "testdb"
+            );
+
+            // Act
+            var result = connector.Ping();
+
+            // Assert
+            Assert.False(result);   
         }
     }
 }
