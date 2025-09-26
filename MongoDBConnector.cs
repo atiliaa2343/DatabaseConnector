@@ -14,13 +14,9 @@ namespace DatabaseConnector
             _database = _client.GetDatabase(databaseName);
         }
 
-        // Expose the database if needed
-        public IMongoDatabase GetDatabase()
-        {
-            return _database;
-        }
+        public IMongoDatabase GetDatabase() => _database;
 
-        // ✅ New method: Ping MongoDB to check connectivity
+        // ✅ Ping method handles both success and fail
         public bool Ping()
         {
             try
@@ -31,7 +27,7 @@ namespace DatabaseConnector
             }
             catch
             {
-                return false;
+                return false; // failed to connect or run ping
             }
         }
     }
